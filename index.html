@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>旅先ルーレット</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+  <header>
+    <h1>旅先ルーレット</h1>
+    <p>全国1,747の市区町村から、次の旅の行き先をひとつ。</p>
+    <div class="scope-ctrl">
+      <select id="regionSel" aria-label="地方をえらぶ"></select>
+      <select id="prefSel" aria-label="都道府県をえらぶ"></select>
+    </div>
+  </header>
+  <main>
+    <div class="map-wrap">
+      <svg id="map" role="img" aria-label="日本地図。ルーレット中は市区町村の土地が光ります"></svg>
+    </div>
+    <aside class="panel">
+      <div class="result-slot">
+        <div class="tanzaku" id="tanzaku" aria-live="polite">
+          <div class="tz-idle" id="tzIdle">どこへ行く？</div>
+          <div class="tz-inner" id="tzInner" hidden>
+            <span class="tz-pref" id="tzPref"></span>
+            <span class="tz-city" id="tzCity"></span>
+          </div>
+        </div>
+        <div class="ekisign" id="ekisign" aria-live="polite" hidden>
+          <div class="eki-pref" id="ekiPref"></div>
+          <div class="eki-board">
+            <div class="eki-kana" id="ekiKana"></div>
+            <div class="eki-kanji" id="ekiKanji"></div>
+            <div class="eki-romaji" id="ekiRomaji"></div>
+            <div class="eki-line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="mode-ctrl" role="group" aria-label="抽選対象">
+        <button class="mode-btn active" id="targetCity" type="button">市区町村</button>
+        <button class="mode-btn" id="targetSta" type="button">駅</button>
+      </div>
+      <div class="mode-ctrl" role="group" aria-label="演出モード">
+        <button class="mode-btn active" id="modeDirect" type="button">一気に決める</button>
+        <button class="mode-btn" id="modeStaged" type="button">都道府県から</button>
+      </div>
+      <button id="spin">スタート</button>
+      <dl class="stats" id="stats">
+        <div><dt>人口</dt><dd id="statPop"></dd></div>
+        <div><dt>面積</dt><dd id="statArea"></dd></div>
+        <div><dt>人口密度</dt><dd id="statDens"></dd></div>
+      </dl>
+      <a class="gmap" id="gmap" target="_blank" rel="noopener">Googleマップで見る ↗</a>
+      <div class="visited-ctrl">
+        <button class="ghost" id="editBtn">行った県を塗って除外する</button>
+        <p class="edit-hint" id="editHint" hidden>地図の都道府県をクリックすると<br>「行った県」の塗り／解除ができます</p>
+        <p class="pool-info" id="poolInfo"></p>
+      </div>
+      <div class="history" id="historyBox" hidden>
+        <h2>これまでの行き先</h2>
+        <ul id="historyList"></ul>
+      </div>
+    </aside>
+  </main>
+  <footer>
+    <p>政令指定都市は市単位、東京23区は区単位で抽選します。北方領土の6村を含みます。沖縄県・小笠原諸島は位置を移動して表示しています。「行った県」はこの端末のブラウザに保存されます。</p>
+    <details class="sources">
+      <summary>データ出典</summary>
+      <ul>
+        <li>都道府県の形状: <a href="https://github.com/dataofjapan/land" target="_blank" rel="noopener">dataofjapan/land</a></li>
+        <li>市区町村の形状: <a href="https://github.com/smartnews-smri/japan-topography" target="_blank" rel="noopener">smartnews-smri/japan-topography</a>（国土交通省「国土数値情報 行政区域データ」を簡略化したもの）</li>
+        <li>市区町村の名称・よみ・役場位置: <a href="https://github.com/code4fukui/localgovjp" target="_blank" rel="noopener">code4fukui/localgovjp</a></li>
+        <li>人口: 総務省「<a href="https://www.soumu.go.jp/menu_news/s-news/01gyosei02_02000389.html" target="_blank" rel="noopener">住民基本台帳に基づく人口、人口動態及び世帯数</a>」（令和7年1月1日現在）</li>
+        <li>面積: 国土地理院「<a href="https://www.gsi.go.jp/KOKUJYOHO/MENCHO-title.htm" target="_blank" rel="noopener">全国都道府県市区町村別面積調</a>」（令和8年4月1日時点）</li>
+        <li>駅・路線: <a href="https://github.com/Seo-4d696b75/station_database" target="_blank" rel="noopener">Seo-4d696b75/station_database</a>（駅データ.jp由来のオープンデータ）</li>
+      </ul>
+    </details>
+  </footer>
+</div>
+  <script src="mapdata.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
