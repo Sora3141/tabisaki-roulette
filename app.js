@@ -500,7 +500,6 @@ function finish(c){
   targetCityBtn.disabled = targetStaBtn.disabled = false;
   btn.textContent = "もう一度スタート";
   updatePoolInfo();
-  setExtras(true);
   showFloatCard();
   setTimeout(() => {
     if(state === "idle" && curCity === c) zoomToCity(c);
