@@ -191,10 +191,26 @@ function scopeVB(){
 }
 
 const resultSlot = document.querySelector(".result-slot");
+const extras = document.getElementById("extras");
+const extrasToggle = document.getElementById("extrasToggle");
+function setExtras(open){
+  extras.classList.toggle("collapsed", !open);
+  extrasToggle.textContent = open ? "詳細をしまう ▾" : "詳細を表示 ▴";
+}
+extrasToggle.addEventListener("click", () => {
+  setExtras(extras.classList.contains("collapsed"));
+});
+setExtras(false);   // 初期は畳んでおく（デスクトップはCSS側で常時展開）
 const isMobile = () => matchMedia("(max-width:760px)").matches;
+function placeFloatCard(){
+  if(isMobile()){
+    resultSlot.style.bottom =
+      (document.querySelector(".panel").offsetHeight + 10) + "px";
+  }
+}
 function showFloatCard(){
-  const panel = document.querySelector(".panel");
-  if(isMobile()) resultSlot.style.bottom = (panel.offsetHeight + 10) + "px";
+  placeFloatCard();
+  setTimeout(placeFloatCard, 520);   // シートの開閉アニメ後に再配置
   resultSlot.classList.add("float-show");
   resultSlot.classList.remove("float-mini");
 }
@@ -484,6 +500,7 @@ function finish(c){
   targetCityBtn.disabled = targetStaBtn.disabled = false;
   btn.textContent = "もう一度スタート";
   updatePoolInfo();
+  setExtras(true);
   showFloatCard();
   setTimeout(() => {
     if(state === "idle" && curCity === c) zoomToCity(c);

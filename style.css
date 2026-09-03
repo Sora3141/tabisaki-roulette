@@ -350,6 +350,12 @@
     cursor:default;
   }
   button#spin:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+  .extras{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  .extras-toggle{display:none}
   .stats{
     visibility:hidden;
     display:grid;
@@ -579,6 +585,30 @@
     button#spin{padding:12px 20px;font-size:15px}
     .stats:not(.show){display:none}
     a.gmap:not(.show){display:none}
+    .extras{
+      gap:12px;
+      overflow:hidden;
+      max-height:60vh;
+      transition:max-height .45s ease, opacity .3s ease;
+    }
+    .extras.collapsed{
+      max-height:0;
+      opacity:0;
+      margin-top:-12px;
+    }
+    .extras-toggle{
+      display:block;
+      align-self:center;
+      border:none;
+      background:none;
+      font-family:var(--sans);
+      font-size:12px;
+      letter-spacing:.1em;
+      color:var(--faint);
+      padding:2px 14px;
+      cursor:pointer;
+    }
+    .extras-toggle:active{color:var(--ink)}
     footer{margin-bottom:40vh}
   }
   @media (prefers-reduced-motion:reduce){
