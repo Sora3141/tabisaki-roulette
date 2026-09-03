@@ -519,7 +519,7 @@
     header p{display:none}
     .scope-ctrl{margin-left:0;width:100%;grid-template-columns:1fr 1fr}
     .scope-ctrl select{padding:7px 8px;font-size:12.5px}
-    main{grid-template-columns:1fr;min-height:40vh}
+    main{grid-template-columns:1fr;min-height:calc(100vh - 150px)}
     .app .panel{
       grid-column:1;
       position:fixed;
@@ -527,8 +527,7 @@
       z-index:2;
       padding:12px 16px calc(12px + env(safe-area-inset-bottom));
       gap:12px;
-      background:#ffffffe8;
-      backdrop-filter:blur(10px);
+      background:#fffffff2;
       border-top:1px solid var(--line);
       border-radius:18px 18px 0 0;
       box-shadow:0 -10px 32px #3c5a4630;
@@ -544,7 +543,30 @@
       border-radius:2px;
       background:var(--line);
     }
-    .result-slot{height:auto;min-height:0}
+    /* 結果はフローティングカード: スタートで右下に出現、確定後は右下に縮んで退避 */
+    .result-slot{
+      position:fixed;
+      right:12px;
+      bottom:220px;
+      z-index:3;
+      height:auto;min-height:0;
+      pointer-events:auto;
+      opacity:0;
+      transform:translateY(16px) scale(.85);
+      transform-origin:bottom right;
+      transition:transform .45s cubic-bezier(.3,.7,.3,1), opacity .3s ease;
+      pointer-events:none;
+    }
+    .result-slot.float-show{
+      opacity:1;
+      transform:none;
+      pointer-events:auto;
+    }
+    .result-slot.float-mini{
+      transform:scale(.5);
+      opacity:.94;
+    }
+    .ekisign{width:240px}
     .tanzaku{height:200px;min-height:200px;width:92px;padding:12px 0}
     .tanzaku::before{top:7px;width:6px;height:6px}
     .tz-inner{margin-top:10px;gap:7px}
@@ -557,7 +579,7 @@
     button#spin{padding:12px 20px;font-size:15px}
     .stats:not(.show){display:none}
     a.gmap:not(.show){display:none}
-    footer{margin-bottom:60vh}
+    footer{margin-bottom:40vh}
   }
   @media (prefers-reduced-motion:reduce){
     .pulse{animation:none;opacity:.5;r:14;stroke-width:1.5}

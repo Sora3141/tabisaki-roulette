@@ -181,7 +181,7 @@ function vbForPids(pids){
   const aspect = MAP.W / MAP.H;
   let vw = Math.max(w * 1.15, 60), vh = Math.max(h * 1.15, 60);
   if(vw / vh > aspect) vh = vw / aspect; else vw = vh * aspect;
-  return [cx - vw/2, cy - vh/2, vw, vh];
+  return adjustVBMobile([cx - vw/2, cy - vh/2, vw, vh]);
 }
 
 function scopeVB(){
@@ -190,7 +190,26 @@ function scopeVB(){
   return vbForPids(pids);
 }
 
+const resultSlot = document.querySelector(".result-slot");
+const isMobile = () => matchMedia("(max-width:760px)").matches;
+function showFloatCard(){
+  const panel = document.querySelector(".panel");
+  if(isMobile()) resultSlot.style.bottom = (panel.offsetHeight + 10) + "px";
+  resultSlot.classList.add("float-show");
+  resultSlot.classList.remove("float-mini");
+}
+function hideFloatCard(){
+  resultSlot.classList.remove("float-show", "float-mini");
+}
+// 確定後カードをタップで拡大/縮小
+resultSlot.addEventListener("click", () => {
+  if(state === "idle" && resultSlot.classList.contains("float-show")){
+    resultSlot.classList.toggle("float-mini");
+  }
+});
+
 function resetTanzaku(){
+  hideFloatCard();
   ekisign.hidden = true;
   tanzaku.hidden = false;
   tzInner.hidden = true;
@@ -354,6 +373,18 @@ function animateVB(to, dur){
     if(p < 1) vbAnim = requestAnimationFrame(step);
   })(t0);
 }
+function adjustVBMobile(box){
+  if(!isMobile()) return box;
+  try{
+    const hb = Math.max(0, document.querySelector("header").getBoundingClientRect().bottom);
+    const sheetTop = document.querySelector(".panel").getBoundingClientRect().top;
+    if(sheetTop - hb < 80) return box;
+    const safeCy = (hb + sheetTop) / 2;
+    const s = Math.min(innerWidth / box[2], innerHeight / box[3]);
+    return [box[0], box[1] + (innerHeight / 2 - safeCy) / s, box[2], box[3]];
+  }catch(e){ return box; }
+}
+
 function zoomToCity(c){
   let x = c.x - 8, y = c.y - 8, w = 16, h = 16;
   if(c.el){
@@ -365,7 +396,7 @@ function zoomToCity(c){
   let vh = Math.max(h * 3, 120);
   if(vw / vh > aspect) vh = vw / aspect; else vw = vh * aspect;
   const cx = x + w / 2, cy = y + h / 2;
-  animateVB([cx - vw / 2, cy - vh / 2, vw, vh], 1100);
+  animateVB(adjustVBMobile([cx - vw / 2, cy - vh / 2, vw, vh]), 1100);
   // パルスの見た目サイズをズーム率に合わせて維持
   scalePulses(c, vh / MAP.H);
 }
@@ -453,9 +484,17 @@ function finish(c){
   targetCityBtn.disabled = targetStaBtn.disabled = false;
   btn.textContent = "もう一度スタート";
   updatePoolInfo();
+  showFloatCard();
   setTimeout(() => {
     if(state === "idle" && curCity === c) zoomToCity(c);
   }, 350);
+  if(isMobile()){
+    setTimeout(() => {
+      if(state === "idle" && curCity === c && resultSlot.classList.contains("float-show")){
+        resultSlot.classList.add("float-mini");
+      }
+    }, 4000);
+  }
 }
 
 const statCells = statsBox.querySelectorAll("div");
@@ -593,6 +632,7 @@ function start(){
   const list = pool();
   if(state !== "idle" || list.length === 0) return;
   clearResultFx();
+  showFloatCard();
   regionSel.disabled = prefSel.disabled = true;
   modeDirectBtn.disabled = modeStagedBtn.disabled = true;
   targetCityBtn.disabled = targetStaBtn.disabled = true;
