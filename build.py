@@ -15,7 +15,7 @@ src = read("index.html")
 
 # <head> の中身から style.css のリンクを除いたもの（メタ・タイトル・フォント）
 head = re.search(r"<head>\n(.*?)</head>", src, re.S).group(1)
-head = re.sub(r'\s*<link rel="stylesheet" href="style.css">', "", head).strip()
+head = re.sub(r'\s*<link rel="stylesheet" href="style.css[^"]*">', "", head).strip()
 
 # <body> の中身からローカル script タグを除いたもの
 body = re.search(r"<body>\n(.*?)</body>", src, re.S).group(1)
