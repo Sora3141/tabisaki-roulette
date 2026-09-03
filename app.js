@@ -304,7 +304,8 @@ function fullVB(){
       const fb = footer.top + scrollY - 8;
       if(fb > T + 100) B = Math.min(B, fb);
     }else{
-      const pt = panel.top + scrollY - 8;
+      // スマホのパネルは画面下固定のボトムシートなので、ビューポート座標のまま使う
+      const pt = panel.top - 10;
       if(pt > T + 100) B = Math.min(B, pt);
     }
   }catch(e){}
